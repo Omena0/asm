@@ -1,0 +1,196 @@
+
+# Simple calculator
+
+main:
+    # Get and store mode
+    ld "\nSelect Mode: [+-*/^] "
+    inp
+    sta
+
+    # Compare
+    ld "+"
+    cmp = a
+    beq add
+
+    ld "-"
+    cmp = a
+    beq substract
+
+    ld "*"
+    cmp = a
+    beq multiply
+
+    ld "/"
+    cmp = a
+    beq divide
+
+    ld "^"
+    cmp = a
+    beq exponent
+
+add:
+    # Print ? + x and get first num
+    ld "? + x "
+    inp
+    sta
+
+    # Print a + ? and get second num
+    pnt
+    ld " + ? "
+    inp
+    stb
+
+    # Print first num
+    lda
+    pnt
+
+    # Print +
+    ld " + "
+    pnt
+
+    # Print second num
+    ldb
+    pnt
+
+    # Print =
+    ld " = "
+    pnt
+
+    # Print result
+    add a b
+    pnt
+    jmp main
+
+substract:
+    # Print ? - x and get first num
+    ld "? - x "
+    inp
+    sta
+
+    # Print a - ? and get second num
+    pnt
+    ld " - ? "
+    inp
+    stb
+
+    # Print first num
+    lda
+    pnt
+
+    # Print -
+    ld " - "
+    pnt
+
+    # Print second num
+    ldb
+    pnt
+
+    # Print =
+    ld " = "
+    pnt
+
+    # Print result
+    sub a b
+    pnt
+    jmp main
+
+multiply:
+    # Print ? * x and get first num
+    ld "? * x "
+    inp
+    sta
+
+    # Print a * ? and get second num
+    pnt
+    ld " * ? "
+    inp
+    stb
+
+    # Print first num
+    lda
+    pnt
+
+    # Print *
+    ld " * "
+    pnt
+
+    # Print second num
+    ldb
+    pnt
+
+    # Print =
+    ld " = "
+    pnt
+
+    # Print result
+    mlt a b
+    pnt
+    jmp main
+    
+divide:
+    # Print ? / x and get first num
+    ld "? / x "
+    inp
+    sta
+
+    # Print a / ? and get second num
+    pnt
+    ld " / ? "
+    inp
+    stb
+
+    # Print first num
+    lda
+    pnt
+
+    # Print /
+    ld " / "
+    pnt
+
+    # Print second num
+    ldb
+    pnt
+
+    # Print =
+    ld " = "
+    pnt
+
+    # Print result
+    div a b
+    pnt
+    jmp main
+
+exponent:
+    # Print ? ^ x and get first num
+    ld "? ^ x "
+    inp
+    sta
+
+    # Print a ^ ? and get second num
+    pnt
+    ld " ^ ? "
+    inp
+    stb
+
+    # Print first num
+    lda
+    pnt
+
+    # Print ^
+    ld " ^ "
+    pnt
+
+    # Print second num
+    ldb
+    pnt
+
+    # Print =
+    ld " = "
+    pnt
+
+    # Print result
+    exp a b
+    pnt
+    jmp main
+
+ext
