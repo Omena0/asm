@@ -1,0 +1,92 @@
+
+# Advanced calculator
+
+main:
+    # Get input
+    ld "\n> "
+    inp
+    sta
+
+    spl "+"
+    std
+    cmp = a
+    bne plus
+
+    lda
+    spl "-"
+    std
+    cmp = a
+    bne minus
+
+    lda
+    spl "*"
+    std
+    cmp = a
+    bne mult
+
+    lda
+    spl "/"
+    std
+    cmp = a
+    bne div
+
+    lda
+    spl "^"
+    std
+    cmp = a
+    bne exp
+
+parse:
+    # Left hand side
+    ldd
+    idx 0
+    stb
+
+    # Right hand side
+    ldd
+    idx 1
+    stc
+
+    # Print equation
+    lda
+    pnt
+
+    # Print equals sign
+    ld " = "
+    pnt
+
+    rts
+
+plus:
+    bnc parse
+    add b c
+    pnt
+    jmp main
+
+minus:
+    bnc parse
+    sub b c
+    pnt
+    jmp main
+
+
+mult:
+    bnc parse
+    mlt b c
+    pnt
+    jmp main
+
+
+div:
+    bnc parse
+    div b c
+    pnt
+    jmp main
+
+exp:
+    bnc parse
+    exp b c
+    pnt
+    jmp main
+
+

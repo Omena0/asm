@@ -1,71 +1,9 @@
 
-# Calculator but better?
-
-# Regs:
-# A: Equation
-# B: num1
-# C: operator
-# D: num2
+# Python interperter
 
 main:
-    # Get input
-    ld "\n> "
+    ld "> "
     inp
     sta
-
-    spt "+"
-    cmp = a
-    beq 
-
-    spt "-"
-    spt "*"
-    spt "/"
-
-parse:
-    
-
-    # Print the equation
-    lda
-    pnt
-
-    # Print =
-    ld " = "
-    pnt
-
-    # Compare operator
-    ld "+"
-    cmp = c
-    beq add
-
-    ld "-"
-    cmp = c
-    beq minus
-
-    ld "*"
-    cmp = c
-    beq mult
-
-    ld "/"
-    cmp = c
-    beq div
-
-add:
-    add b d
-    pnt
+    py a
     jmp main
-
-minus:
-    sub b d
-    pnt
-    jmp main
-
-mult:
-    mlt b d
-    pnt
-    jmp main
-
-div:
-    div b d
-    pnt
-    jmp main
-

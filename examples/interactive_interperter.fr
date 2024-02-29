@@ -1,0 +1,17 @@
+
+# Interactive interperter
+
+main:
+    ld ""
+    stb
+
+loop:
+    ld "\n> "
+    inp
+    sta
+    ldb
+    exc a
+    stb
+    jmp loop
+
+ext

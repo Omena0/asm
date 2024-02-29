@@ -7,19 +7,25 @@ from sys import argv
 code   = []    # Code as objects
 label  = {}    # Labels
 regs   = {}    # Registers
+stack  = []    # Stack
 load   = ''    # Loaded data
+
+dbg = False
 
 if len(argv) == 1: file = 'test.fr'
 else: file = argv[1]
 
 # Read file + preprocess (comments, empty lines)
-with open(file) as f: lines = [i.strip('\n') for i in f.readlines() if i.strip() != '' and not i.strip().startswith('#')]
+with open(file) as f: lines = [i.strip('\n') for i in f.readlines()]# if i.strip() != '' and not i.strip().startswith('#')]
 
 
 # Convert to objects
 i = 0
 labelName = 'root'
 for i,line in enumerate(lines):
+    if line.strip() == '' or line.strip().startswith('#'):
+        code.append({'type':'comment','value':line.removeprefix('#').strip()})
+        continue
     ind = line.count('    ') + line.count('\t')
     line = line.strip()
     if line.endswith(':') and ind == 0:
@@ -46,20 +52,33 @@ for i,line in enumerate(lines):
     print(f'{i}: {ind} {line}')
 
 def execInst(instruction:str):
-    execute(0,{'type':'code','code':instruction,'indents':0,'label':0,'labelName':'root'})
+    execute(line,{'type':'code','code':instruction,'indents':0,'label':0,'labelName':'root'})
 
 def execute(i:int,inst:dict):
-    global load, regs
+    global load, regs, line, dbg
     while True:
         if i == -100 and inst == {}:
             inst = code[1]
             i = 0
 
-        # Skip labels
-        if inst['type'] == 'label':
+        # Skip labels and comments
+        if inst['type'] in {'label','comment'}:
             i += 1
             inst = code[i]
             continue
+        
+        line = i
+        
+        
+            
+        # Debug
+        if debug or dbg:
+            dbg = False
+            print('Code: ',i+1,inst['code'])
+            print('Regs: ',regs)
+            print('Load: ',load)
+            print()
+
         
         # Split instruction
         try:
@@ -123,13 +142,11 @@ def execute(i:int,inst:dict):
             
         # Branch if true
         elif opcode == 'beq':
-            if load == True:
-                execInst(f'bnc {args}')
+            if load: execInst(f'bnc {args}')
                 
         # Branch if false
         elif opcode == 'bne':
-            if load == False:
-                execInst(f'bnc {args}')        
+            if not load: execInst(f'bnc {args}')        
         
         # Return from subroutine
         elif opcode == 'rts':
@@ -190,18 +207,48 @@ def execute(i:int,inst:dict):
             load = load[1:]
         
         # Split instruction
-        elif opcode == 'spt':
-            load = load.split(args.strip('"').replace('\\n','\n'))
+        elif opcode == 'spl':
+            a = load.split(args.strip('"').replace('\\n','\n'))
+            if len(a) == 1: a = a[0] # No 1 long lists
+            load = a
             
         # Index instruction
         elif opcode == 'idx':
             load = load[int(args)]
+            print(load)
+        
+        # Push instruction
+        elif opcode == 'psh':
+            stack.append(load)
+        
+        # Pop instruction
+        elif opcode == 'pop':
+            load = stack.pop()
+        
+        # StackPeek instruction
+        elif opcode == 'spk':
+            load = stack[load]
+        
+        # Exec instruction
+        elif opcode == 'exc':
+            execInst(regs[args])
+            
+        # Python instruction
+        elif opcode == 'py':
+            exec(regs[args])
+        
+        # Debug instruction
+        elif opcode == 'dbg':
+            dbg = True
         
         i += 1
         try: inst = code[i]
         except IndexError:
             return
 
+debug = False
+
 try: execute(-100,{})
 except Exception as e:
-    print(f'\n{e}')
+    print(f'\nError at {line}: {e}')
+    if debug: raise e
